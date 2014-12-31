@@ -17,8 +17,8 @@ FAMIXEJBRetiever >> createEJBEntities [
 	| interressingAnnotations |
 	interressingAnnotations := model allAnnotationTypes
 		select: [ :annotationType | 
-			{'Stateless'.
-			'Stateful'.
+			{"'Stateless'.
+			'Stateful'."
 			'Local'.
 			'Remote'} anySatisfy: [ :annotationName | annotationType name = annotationName ] ].
 	interressingAnnotations

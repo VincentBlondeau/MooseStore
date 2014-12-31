@@ -22,6 +22,8 @@ Class {
 
 { #category : #accessing }
 FAMIXEJBEntity >> annotatedClass [
+	<MSEProperty: #ejbClass type: #FAMIXClass> 
+	<MSEComment: 'The class that is the ejb'>
 	^ annotatedClass
 ]
 
@@ -37,7 +39,7 @@ FAMIXEJBEntity >> belongsTo [
 
 { #category : #accessing }
 FAMIXEJBEntity >> ejbClass [
-	<MSEProperty: #ejbClass type: #String> <derived>
+	<MSEProperty: #ejbClass type: #String> 
 	<MSEComment: 'ejb-jar.xml : ejb-class'>
 	"ejb-jar.xml : ejb-class"
 
@@ -51,7 +53,7 @@ FAMIXEJBEntity >> ejbClass: anObject [
 
 { #category : #accessing }
 FAMIXEJBEntity >> ejbName [
-	<MSEProperty: #ejbName type: #String> <derived>
+	<MSEProperty: #ejbName type: #String> 
 	<MSEComment: 'ejb-jar.xml : ejb-name'>
 	"ejb-jar.xml : ejb-name"
 
