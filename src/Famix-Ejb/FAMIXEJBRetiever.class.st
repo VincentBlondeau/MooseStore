@@ -75,11 +75,12 @@ FAMIXEJBRetiever >> parseSignature: aString [
 	name ifEmpty: [ ^ nil ].	" (name includesSubstring: 'net.atos.wlp.ics.contract.VisaIssuerClearingInformationService') ifTrue: [ self halt ]."
 	self halt.
 	ejbEntities := (model allWithType: FAMIXEJBEntity)
-		select: [ :e | e name asString = name or: [ e ejbName asString = name ] ].
+		select: [ :e | e name asString = name or: [ e ejbNames halt asString = name ] ].
 	ejbEntities isEmpty
 		ifTrue: [ 
 			self inform: 'FAMIXEJBRetriever-Not Found...'.
 			self logCr: 'Not found: ' , aString.
+			self halt.
 			^ nil ].
 	^ ejbEntities first
 ]

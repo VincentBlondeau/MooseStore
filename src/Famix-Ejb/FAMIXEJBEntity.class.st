@@ -14,11 +14,16 @@ Class {
 	#superclass : #FAMIXNamedEntity,
 	#instVars : [
 		'annotatedClass',
-		'ejbName',
-		'ejbClass'
+		'ejbClass',
+		'ejbNames'
 	],
 	#category : #'Famix-Ejb'
 }
+
+{ #category : #accessing }
+FAMIXEJBEntity >> addEjbName: aString [
+	ejbNames add: aString
+]
 
 { #category : #accessing }
 FAMIXEJBEntity >> annotatedClass [
@@ -52,17 +57,25 @@ FAMIXEJBEntity >> ejbClass: anObject [
 ]
 
 { #category : #accessing }
-FAMIXEJBEntity >> ejbName [
-	<MSEProperty: #ejbName type: #String> 
+FAMIXEJBEntity >> ejbNames [
+	<MSEProperty: #ejbNames type: #String> 
 	<MSEComment: 'ejb-jar.xml : ejb-name'>
+	<multivalued>
 	"ejb-jar.xml : ejb-name"
 
-	^ ejbName
+	^ ejbNames
 ]
 
 { #category : #accessing }
-FAMIXEJBEntity >> ejbName: aString [
-	ejbName := aString
+FAMIXEJBEntity >> ejbNames: aCollectionOfStrings [
+	ejbNames := aCollectionOfStrings
+]
+
+{ #category : #accessing }
+FAMIXEJBEntity >> initialize [
+	super initialize.
+	ejbNames := OrderedCollection new.
+	
 ]
 
 { #category : #accessing }

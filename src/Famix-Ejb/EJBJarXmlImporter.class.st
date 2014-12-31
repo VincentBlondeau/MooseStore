@@ -14,10 +14,10 @@ EJBJarXmlImporter >> basicRun [
 			session := (aSessionXmlElement elementAt: 'business-local') nodes first string.
 			((model allWithType: FAMIXEJBEntity) select: [ :famixEjbEntity | famixEjbEntity name = session ])
 				ifNotEmpty: [ :famixEjbEntity | 
-					famixEjbEntity size > 0 ifTrue: [ 1 halt. ].
+					famixEjbEntity size > 1 ifTrue: [ 1 halt. ].
 					famixEjbEntity first
 						ejbClass: impl;
-						ejbName: name ] ].
+						addEjbName: name ] ].
 "	(names flatten asOrderedCollection
 		intersection: ((model allWithType: FAMIXEJBEntity) collect: #name) asOrderedCollection) ifNotEmpty: [ self halt ]"
 ]
