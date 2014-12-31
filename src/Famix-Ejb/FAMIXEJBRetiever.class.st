@@ -35,23 +35,25 @@ FAMIXEJBRetiever >> createEJBEntities [
 
 { #category : #private }
 FAMIXEJBRetiever >> createLinksToEntities [
-	| class methods ref assocs |
+	| class methods ref assocs goodAssocs |
 	class := model allClasses entityNamed: 'net::atos::xa::resourcelocator::ResourceLocator'.
 	methods := class methods select: [ :m | m name = 'lookup' ].
-	methods add: ((model allClasses entityNamed: '<Default Package>::<StubMethodContainer>')
-	 methods detect: [ :m | m name = 'lookup' ]).
+	methods
+		add:
+			((model allClasses entityNamed: '<Default Package>::<StubMethodContainer>') methods detect: [ :m | m name = 'lookup' ]).
 	assocs := methods
-		collect: [ :m | m incomingInvocations collect: [ :invocation | invocation from typeScope -> (self parseSignature: invocation signature) ] ].	"made in 2 passes beacause some associations are not found..."
+		collect: [ :m | 
+			m incomingInvocations
+				collect: [ :invocation | invocation from typeScope -> (self parseSignature: invocation signature) ] ].	"made in 2 passes beacause some associations are not found..."
 	self halt.
-	assocs flatten
+	goodAssocs := assocs flatten select: [ :assoc | assoc value isNotNil ].
+	goodAssocs
 		do: [ :assoc | 
-			assoc value
-				ifNotNil: [ 
-					ref := FAMIXEJBReference new
-						source: assoc key;
-						target: assoc value;
-						yourself.	"the link should be done at class level"
-					model silentlyAdd: ref ] ]
+			ref := FAMIXEJBReference new
+				source: assoc key;
+				target: assoc value;
+				yourself.	"the link should be done at class level"
+			model silentlyAdd: ref ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -65,7 +67,6 @@ FAMIXEJBRetiever >> parseEjbJarXml [
 { #category : #'as yet unclassified' }
 FAMIXEJBRetiever >> parseSignature: aString [
 	| name ejbEntities |
-	
 	(aString includes: $")
 		ifFalse: [ 
 			self logCr: 'Not a string ' , aString.
@@ -73,14 +74,12 @@ FAMIXEJBRetiever >> parseSignature: aString [
 		select: [ :e | e name asString = 'WlpCurrencyMangerBean' ]."
 	name := (aString copyAfter: $") copyUpTo: $".
 	name ifEmpty: [ ^ nil ].	" (name includesSubstring: 'net.atos.wlp.ics.contract.VisaIssuerClearingInformationService') ifTrue: [ self halt ]."
-	self halt.
 	ejbEntities := (model allWithType: FAMIXEJBEntity)
-		select: [ :e | e name asString = name or: [ e ejbNames halt asString = name ] ].
+		select: [ :e | e name asString = name or: [ e ejbNames anySatisfy: [ :ejbName | ejbName = name ] ] ].
 	ejbEntities isEmpty
 		ifTrue: [ 
 			self inform: 'FAMIXEJBRetriever-Not Found...'.
 			self logCr: 'Not found: ' , aString.
-			self halt.
 			^ nil ].
 	^ ejbEntities first
 ]

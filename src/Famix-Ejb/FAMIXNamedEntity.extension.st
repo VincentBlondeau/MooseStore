@@ -6,7 +6,7 @@ FAMIXNamedEntity >> userClasses [
 	<multivalued>
 	<derived>
 	<MSEComment: 'The classes using this EJB'>
-	^ self privateState cacheAt: #userClasses ifAbsent: [ FMMultivalueLink on: self opposite: #target: ]
+	^ self privateState cacheAt: #userClasses ifAbsentPut: [ FMMultivalueLink on: self opposite: #target: ]
 ]
 
 { #category : #'*Famix-Ejb' }

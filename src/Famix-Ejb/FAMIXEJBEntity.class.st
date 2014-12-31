@@ -20,6 +20,13 @@ Class {
 	#category : #'Famix-Ejb'
 }
 
+{ #category : #'initialize-release' }
+FAMIXEJBEntity class >> annotation [
+	<MSEClass: #FAMIXEJBEntity super: #FAMIXNamedEntity>
+	<package: #'FAMIX-EJB'>
+	^self
+]
+
 { #category : #accessing }
 FAMIXEJBEntity >> addEjbName: aString [
 	ejbNames add: aString
@@ -27,7 +34,7 @@ FAMIXEJBEntity >> addEjbName: aString [
 
 { #category : #accessing }
 FAMIXEJBEntity >> annotatedClass [
-	<MSEProperty: #ejbClass type: #FAMIXClass> 
+	<MSEProperty: #annotatedClass type: #FAMIXClass> 
 	<MSEComment: 'The class that is the ejb'>
 	^ annotatedClass
 ]
@@ -63,7 +70,7 @@ FAMIXEJBEntity >> ejbNames [
 	<multivalued>
 	"ejb-jar.xml : ejb-name"
 
-	^ ejbNames
+	^ ejbNames asSet
 ]
 
 { #category : #accessing }
@@ -74,7 +81,7 @@ FAMIXEJBEntity >> ejbNames: aCollectionOfStrings [
 { #category : #accessing }
 FAMIXEJBEntity >> initialize [
 	super initialize.
-	ejbNames := OrderedCollection new.
+	ejbNames := Set new.
 	
 ]
 
