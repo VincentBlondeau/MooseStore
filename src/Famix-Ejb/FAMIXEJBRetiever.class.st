@@ -59,25 +59,27 @@ FAMIXEJBRetiever >> parseEjbJarXml [
 	| files |
 	files := (EJBJarXmlRetiever runOn: model rootFolder asFileReference) select: [ :file | file size > 500 ].	"remove the almost empty files"
 	files do: [ :file | EJBJarXmlImporter runOnXmlFileNamed: file inRootDirectory: '' with: model ].
-	self halt
+
 ]
 
 { #category : #'as yet unclassified' }
 FAMIXEJBRetiever >> parseSignature: aString [
 	| name ejbEntities |
-	self halt.
-	(aString includes:  $") ifFalse: [self logCr: 'Not a string ', aString.  ^nil ].
-	"(model allClasses)
+	
+	(aString includes: $")
+		ifFalse: [ 
+			self logCr: 'Not a string ' , aString.
+			^ nil ].	"(model allClasses)
 		select: [ :e | e name asString = 'WlpCurrencyMangerBean' ]."
 	name := (aString copyAfter: $") copyUpTo: $".
-	name ifEmpty: [ ^nil ].
-  " (name includesSubstring: 'net.atos.wlp.ics.contract.VisaIssuerClearingInformationService') ifTrue: [ self halt ]."
+	name ifEmpty: [ ^ nil ].	" (name includesSubstring: 'net.atos.wlp.ics.contract.VisaIssuerClearingInformationService') ifTrue: [ self halt ]."
+	self halt.
 	ejbEntities := (model allWithType: FAMIXEJBEntity)
-		select: [ :e | e name asString = name ].
+		select: [ :e | e name asString = name or: [ e ejbName asString = name ] ].
 	ejbEntities isEmpty
 		ifTrue: [ 
-			self inform: 'FAMIXEJBRetriever-Not Found...'.	
-			self logCr: 'Not found: ', aString.
-			^ nil ] .
+			self inform: 'FAMIXEJBRetriever-Not Found...'.
+			self logCr: 'Not found: ' , aString.
+			^ nil ].
 	^ ejbEntities first
 ]

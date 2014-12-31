@@ -31,7 +31,14 @@ FAMIXEJBEntity >> annotatedClass: anFAMIXClass [
 ]
 
 { #category : #accessing }
+FAMIXEJBEntity >> belongsTo [
+	^ self annotatedClass
+]
+
+{ #category : #accessing }
 FAMIXEJBEntity >> ejbClass [
+	<MSEProperty: #ejbClass type: #String> <derived>
+	<MSEComment: 'ejb-jar.xml : ejb-class'>
 	"ejb-jar.xml : ejb-class"
 
 	^ ejbClass
@@ -44,6 +51,8 @@ FAMIXEJBEntity >> ejbClass: anObject [
 
 { #category : #accessing }
 FAMIXEJBEntity >> ejbName [
+	<MSEProperty: #ejbName type: #String> <derived>
+	<MSEComment: 'ejb-jar.xml : ejb-name'>
 	"ejb-jar.xml : ejb-name"
 
 	^ ejbName
@@ -56,6 +65,8 @@ FAMIXEJBEntity >> ejbName: aString [
 
 { #category : #accessing }
 FAMIXEJBEntity >> sessionEntityName [
+	<MSEProperty: #sessionEntityName type: #String> <derived>
+	<MSEComment: 'ejb-jar.xml : business-local'>
 	"ejb-jar.xml : business-local"
 
 	^ self name
