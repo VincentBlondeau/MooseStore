@@ -45,7 +45,6 @@ FAMIXEJBRetiever >> createLinksToEntities [
 		collect: [ :m | 
 			m incomingInvocations
 				collect: [ :invocation | invocation from typeScope -> (self parseSignature: invocation signature) ] ].	"made in 2 passes beacause some associations are not found..."
-	self halt.
 	goodAssocs := assocs flatten select: [ :assoc | assoc value isNotNil ].
 	goodAssocs
 		do: [ :assoc | 
