@@ -18,3 +18,8 @@ FAMIXContainerEntity >> relatedEJBs [
 FAMIXContainerEntity >> relatedEJBs: aCollectionOfFamixContainers [
 	self relatedEJBs value: aCollectionOfFamixContainers 
 ]
+
+{ #category : #'*Famix-Ejb' }
+FAMIXContainerEntity >> relatedEJBsEntities [
+	^ (self relatedEJBs collect: #to) asSet
+]
