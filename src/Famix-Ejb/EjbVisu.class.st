@@ -18,11 +18,14 @@ Class {
 
 { #category : #'as yet unclassified' }
 EjbVisu >> buildVisualization [
-	| inspectAction |
+	| fromClasses toEjbClasses packagesFrom packagesTo |
 	"	recursiveNodeBuilder := TLCompositeNodeBuilder childrenProperty: #belongsTo.
 	self nodeBuilder: recursiveNodeBuilder."
 	self title: 'Ejb usage'.
-	self nodeBuilder nodeLabel: #mooseName.
+	fromClasses := self refs collectAsSet: #from.
+	toEjbClasses := self refs collectAsSet: #to.
+	packagesFrom := fromClasses collectAsSet: #belongsTo.
+	packagesTo := toEjbClasses collectAsSet: [ :c | c annotatedClass belongsTo ].
 	self
 		layout:
 			(RTHorizontalLineLayout new
@@ -30,13 +33,22 @@ EjbVisu >> buildVisualization [
 				alignCenter).
 	self > #left layout: RTVerticalLineLayout new alignRight.
 	self > #right layout: RTVerticalLineLayout new alignTop.
-	inspectAction := TLCustomAction block: [ :aNode | aNode entity inspect ].
-	self nodeBuilder
-		addInteraction: (inspectAction withMenu: 'Inspect');
-		addInteraction: TLNodeBasicInteraction draggable.
-	self > #left addNodesFromEntities: (self refs collect: #from) asSet.
-	self > #right addNodesFromEntities: ((self refs collect: #to) asSet sorted: [ :a :b | a name > b name ]).
-	self > #left connectFollowingProperty: #relatedEJBsEntities context: self > #right
+	self > #left
+		nodeBuilder:
+			((TLCompositeNodeBuilder childrenProperty: #classes)
+				nodeLabel: #mooseName;
+				yourself).
+	self > #right
+		nodeBuilder:
+			((TLCompositeNodeBuilder
+				childrenProperty: [ :entity | toEjbClasses select: [ :class | class annotatedClass belongsTo = entity ] ])
+				nodeLabel: #mooseName;
+				yourself).
+	self > #left addNodesFromEntities: packagesFrom.
+	self > #right addNodesFromEntities: packagesTo.
+	(self > #left flatCollect: #childrenNodes)
+		connectFollowingProperty: [ :e | e relatedEJBsEntities ]
+		context: (self > #right flatCollect: #childrenNodes)
 ]
 
 { #category : #accessing }
