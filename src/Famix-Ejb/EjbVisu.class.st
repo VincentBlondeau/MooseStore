@@ -18,8 +18,8 @@ Class {
 
 { #category : #'as yet unclassified' }
 EjbVisu >> buildVisualization [
-	|  |
-"	recursiveNodeBuilder := TLCompositeNodeBuilder childrenProperty: #belongsTo.
+	| inspectAction |
+	"	recursiveNodeBuilder := TLCompositeNodeBuilder childrenProperty: #belongsTo.
 	self nodeBuilder: recursiveNodeBuilder."
 	self title: 'Ejb usage'.
 	self nodeBuilder nodeLabel: #mooseName.
@@ -30,8 +30,12 @@ EjbVisu >> buildVisualization [
 				alignCenter).
 	self > #left layout: RTVerticalLineLayout new alignRight.
 	self > #right layout: RTVerticalLineLayout new alignTop.
+	inspectAction := TLCustomAction block: [ :aNode | aNode entity inspect ].
+	self nodeBuilder
+		addInteraction: (inspectAction withMenu: 'Inspect');
+		addInteraction: TLNodeBasicInteraction draggable.
 	self > #left addNodesFromEntities: (self refs collect: #from) asSet.
-	self > #right addNodesFromEntities: ((self refs collect: #to) asSet sorted: [:a :b | a name > b name ] ).
+	self > #right addNodesFromEntities: ((self refs collect: #to) asSet sorted: [ :a :b | a name > b name ]).
 	self > #left connectFollowingProperty: #relatedEJBsEntities context: self > #right
 ]
 
