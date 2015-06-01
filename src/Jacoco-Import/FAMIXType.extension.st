@@ -1,7 +1,7 @@
-Extension { #name : #FAMIXClass }
+Extension { #name : #FAMIXType }
 
 { #category : #'*Jacoco-Import' }
-FAMIXClass >> coverMethods [
+FAMIXType >> coverMethods [
 	<MSEProperty: #coverMethods type: #FAMIXMethod opposite: #coveredByTestClasses>
 	<multivalued>
 	<MSEComment: 'Methods that are covered by this class'>
@@ -11,6 +11,14 @@ FAMIXClass >> coverMethods [
 ]
 
 { #category : #'*Jacoco-Import' }
-FAMIXClass >> coverMethods: aCollection [
+FAMIXType >> coverMethods: aCollection [
 	self coverMethods values: aCollection
+]
+
+{ #category : #'*Jacoco-Import' }
+FAMIXType >> isCoveringMethods [
+	<MSEProperty: #isCoveringMethods type: #Boolean>
+	<multivalued>
+	<MSEComment: 'True is the class covers methods'>
+	^ self coverMethods isNotEmpty
 ]
