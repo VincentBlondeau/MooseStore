@@ -280,7 +280,7 @@ HismoTest >> testPersistent [
 
 { #category : #'testing - history group' }
 HismoTest >> testPrintOn [
-	self assert: HismoHistoryGroup new printString equals: 'Group (0 items)'
+	self assert: HismoHistoryGroup new printString equals: 'Group (0 entities)'
 ]
 
 { #category : #'testing - model history' }
@@ -482,10 +482,10 @@ HismoTest >> testViewEvolution2 [
 	testData simpleHistory allClassHistories
 		do: [ :each | 
 			| view |
-			view := ROMondrianViewBuilder new.
-			self assert: view raw numberOfElements equals: 0.
+			view := RTMondrianViewBuilder new.
+			self assert: view view numberOfElements equals: 0.
 			self shouldnt: [ each viewEvolutionOn: view ] raise: Error.
-			self assert: view raw numberOfElements > 0 ]
+			self assert: view view numberOfElements > 0 ]
 ]
 
 { #category : #'testing - ui' }
@@ -516,10 +516,10 @@ HismoTest >> testViewSimpleEvolutionMatrix [
 { #category : #'testing - class history' }
 HismoTest >> testViewSimpleEvolutionMatrix2 [
 	| view |
-	view := ROMondrianViewBuilder new.
-	self assert: view raw numberOfElements equals: 0.
+	view := RTMondrianViewBuilder new.
+	self assert: view view numberOfElements equals: 0.
 	self shouldnt: [ testData simpleHistory viewSimpleEvolutionMatrixIn: view ] raise: Error.
-	self assert: view raw numberOfElements > 0
+	self assert: view view numberOfElements > 0
 ]
 
 { #category : #'testing - class history' }

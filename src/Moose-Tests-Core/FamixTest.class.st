@@ -76,10 +76,7 @@ FamixTest >> testRobustMSEImport [
 	importer repository elements do: [ :each | model add: each ].
 	self assert: model allClasses size equals: 2.
 	self assert: model allMethods size equals: 1.
-	self assert: model allInheritanceDefinitions size equals: 1.
-	self assert: model allClasses printString equals: 'All famixclasses (2 FAMIXClasses)'.
-	self assert: model allMethods printString equals: 'All famixmethods (1 FAMIXMethod)'.
-	self assert: model allInheritanceDefinitions printString equals: 'All famixinheritances (1 FAMIXInheritance)'
+	self assert: model allInheritanceDefinitions size equals: 1
 ]
 
 { #category : #tests }

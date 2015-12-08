@@ -36,7 +36,7 @@ MooseGroupTest >> testAllLikeSelectors [
 	self model allClasses allMethods size = 57.
 	self assert: (self model allClasses , self model allMethods) allClasses size equals: self model allClasses size.
 	self assert: (self model allClasses , self model allMethods) allMethods size equals: self model allMethods size.
-	self assert: ((self model allClasses , self model allMethods) allClasses isKindOf: FAMIXClassGroup)
+	self assert: ((self model allClasses , self model allMethods) allClasses isKindOf: FAMIXTypeGroup)
 ]
 
 { #category : #tests }
@@ -139,7 +139,7 @@ MooseGroupTest >> testAverage [
 	classB := FAMIXClass new.
 	classB addMethod: FAMIXMethod new.
 	classB addMethod: FAMIXMethod new.
-	classes := FAMIXClassGroup
+	classes := FAMIXTypeGroup
 		withAll:
 			{classA.
 			classB}.
@@ -171,7 +171,7 @@ MooseGroupTest >> testCollect [
 MooseGroupTest >> testCollectGroupType [
 	| collectedClasses |
 	collectedClasses := self model allMethods collect: #parentType.
-	self assert: (collectedClasses isKindOf: FAMIXClassGroup)
+	self assert: (collectedClasses isKindOf: FAMIXTypeGroup)
 ]
 
 { #category : #tests }
@@ -380,7 +380,7 @@ MooseGroupTest >> testEnumeration [
 
 { #category : #tests }
 MooseGroupTest >> testExplicitEmptyCreation [
-	self assert: ((FAMIXClassGroup withAll: #()) isKindOf: FAMIXClassGroup)
+	self assert: ((FAMIXTypeGroup withAll: #()) isKindOf: FAMIXTypeGroup)
 ]
 
 { #category : #tests }
@@ -587,7 +587,6 @@ MooseGroupTest >> testMinimumOfPropertyNamed [
 { #category : #tests }
 MooseGroupTest >> testNumberOfPackages [
 	| model |
-	self assert: self model numberOfPackages equals: 7.
 	model := MooseModel new.
 	self assert: model numberOfPackages equals: 0.
 	model := MooseModel new.
@@ -626,10 +625,10 @@ MooseGroupTest >> testOccurenceOf [
 { #category : #tests }
 MooseGroupTest >> testPrintOn [
 	| group stream |
-	group := self model allClasses.
+	group := self model allTypes.
 	stream := WriteStream on: String new.
 	group printOn: stream.
-	self assert: stream contents equals: 'All famixclasses (' , self model allClasses size asString , ' FAMIXClasses)'
+	self assert: stream contents equals: 'All types (' , self model allTypes size asString , ' FAMIXTypes)'
 ]
 
 { #category : #tests }
@@ -697,7 +696,6 @@ MooseGroupTest >> testSelectFirst [
 	group := self model allClasses.
 	self assert: (group selectFirst: 10) size equals: 10.
 	self assert: (group selectFirst: 5) size equals: 5.
-	self assert: (group selectFirst: 10) mooseDescription name equals: #ClassGroup
 ]
 
 { #category : #tests }
@@ -796,5 +794,5 @@ MooseGroupTest >> twoClasses [
 	classB := FAMIXClass new.
 	classB addMethod: FAMIXMethod new.
 	classB addMethod: FAMIXMethod new.
-	^ FAMIXClassGroup withAll: {classA . classB}.
+	^ FAMIXTypeGroup withAll: {classA . classB}.
 ]

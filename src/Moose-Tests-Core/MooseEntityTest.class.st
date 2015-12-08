@@ -59,7 +59,7 @@ MooseEntityTest >> testAllPropertySelectors [
 	| model class |
 	model := MooseModel new.
 	self assert: (MooseEntity allPropertySelectorsComputableIn: model) equals: IdentityDictionary new.
-	model := FAMIXClassGroup new.
+	model := FAMIXTypeGroup new.
 	class := FAMIXClass new name: 'AClass'.
 	model add: class.
 	self assert: (MooseEntity allPropertySelectorsComputableIn: model) equals: IdentityDictionary new.
@@ -85,9 +85,9 @@ MooseEntityTest >> testAnnotation [
 { #category : #tests }
 MooseEntityTest >> testAsMooseFinderItemNamed [
 	| entity1 entity2 model model2 |
-	entity1 := FAMIXClass new.
+	entity1 := FAMIXType new.
 	entity1 name: 'hello'.
-	entity2 := FAMIXClass new.
+	entity2 := FAMIXType new.
 	entity2 name: 'hello2'.
 	model := MooseModel new.
 	model
@@ -96,7 +96,7 @@ MooseEntityTest >> testAsMooseFinderItemNamed [
 			entity2}.
 	self assert: (model asMooseFinderItemNamed: 'bouba' in: model) == model.
 	model2 := entity1 asMooseFinderItemNamed: 'bouba' in: model.
-	self assert: model2 class == FAMIXClassGroup.
+	self assert: model2 class == FAMIXTypeGroup.
 	self assert: model2 name equals: 'Bouba: hello'.
 	self assert: model2 entities asArray equals: {entity1}
 ]
@@ -242,6 +242,7 @@ MooseEntityTest >> testPrintOnWithError [
 	cls := Class new 
 			superclass: MooseEntity; 
 			setFormat: MooseEntity format; 
+			layout: MooseEntity layout copy;
 			yourself.
 	cls compileSilently: 'mooseName   ^ 1/0'.
 	entity := cls new.

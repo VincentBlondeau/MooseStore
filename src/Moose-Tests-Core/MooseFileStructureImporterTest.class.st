@@ -3,26 +3,33 @@ Class {
 	#superclass : #TestCase,
 	#instVars : [
 		'model',
-		'toDelete'
+		'toDelete',
+		'fileSystem'
 	],
 	#category : #'Moose-Tests-Core'
 }
 
 { #category : #setup }
 MooseFileStructureImporterTest >> createDirectory: aString [
-	self toDelete addFirst: aString.
-	^ (self filesystem ensureDirectory: (self filesystem pathFromString: aString))
+	| fileReference |
+	fileReference := aString asFileReferenceWith: self filesystem.
+	self toDelete addFirst: fileReference.
+	self filesystem ensureCreateDirectory: fileReference.
+	^ fileReference
 ]
 
 { #category : #setup }
 MooseFileStructureImporterTest >> createFile: aString [
-	self toDelete addFirst: aString.
-	^ (self filesystem open: aString writable: true)
+	| fileReference |
+	fileReference := aString asFileReferenceWith: self filesystem.
+	self toDelete addFirst: fileReference.
+	^ self filesystem open: aString writable: true
 ]
 
 { #category : #setup }
 MooseFileStructureImporterTest >> filesystem [
-	^ FileSystem disk
+	"Should be cached. The call FileSystem memory create a new instance each time..."
+	^ fileSystem ifNil: [ fileSystem := FileSystem memory ]
 ]
 
 { #category : #setup }
@@ -32,33 +39,32 @@ MooseFileStructureImporterTest >> foldersString [
 
 { #category : #setup }
 MooseFileStructureImporterTest >> setUp [
-	| stream file |
+	| stream file fileReferenceRoot |
 	toDelete := OrderedCollection new.
-	self createDirectory: self foldersString.
+	fileReferenceRoot := self createDirectory: self foldersString.
 	self createDirectory: self subFolderAString.
 	self createDirectory: self subFolderBString.
-	(self createFile: (self subFolderAString , 'emptyFile')) writeStream close.
-	(self createFile: (self subFolderBString , 'emptyFile')) writeStream close.
-	(self createFile: (self foldersString , 'emptyFile')) writeStream close.
-	file := self createFile: (self foldersString , 'fileWith9Chars2Lines').
+	(self createFile: self subFolderAString , 'emptyFile') writeStream close.
+	(self createFile: self subFolderBString , 'emptyFile') writeStream close.
+	(self createFile: self foldersString , 'emptyFile') writeStream close.
+	file := self createFile: self foldersString , 'fileWith9Chars2Lines'.
 	stream := file writeStream.
 	stream
 		nextPutAll: '123456';
 		cr;
 		nextPutAll: '789'.
 	stream close.
-	file := self createFile: (self foldersString , 'fileWith9Chars4Lines2EmptyLines').
+	file := self createFile: self foldersString , 'fileWith9Chars4Lines2EmptyLines'.
 	stream := file writeStream.
 	stream
-		nextPutAll: '123456';cr;
+		nextPutAll: '123456';
+		cr;
 		cr;
 		cr;
 		nextPutAll: '789'.
 	stream close.
 	model := MooseModel new.
-	(MooseFileStructureImporter new)
-		mooseModel: model;
-		completeImport: (OrderedCollection with: 'folders').
+	MooseFileStructureImporter runOn: model withFolders: (OrderedCollection with: fileReferenceRoot)
 ]
 
 { #category : #setup }
@@ -84,8 +90,8 @@ MooseFileStructureImporterTest >> testFiles [
 	self assert: files size equals: 5.
 	self assert: (files select: [ :each | each belongsTo isNil ]) size equals: 0.
 	file := files entityNamed: #'folders/emptyFile'.
-	self assert: (file propertyNamed: #totalNumberOfLinesOfText) equals: 1.
-	self assert: (file propertyNamed: #numberOfLinesOfText) equals: 1.
+	self assert: (file totalNumberOfLinesOfText) equals: 1.
+	self assert: (file numberOfLinesOfText) equals: 1.
 	self assert: (file propertyNamed: #numberOfCharacters) equals: 0.
 	self assert: (file propertyNamed: #averageNumberOfCharactersPerLine) equals: 0.
 	self assert: file numberOfBytes equals: 0.
@@ -113,7 +119,7 @@ MooseFileStructureImporterTest >> testFolders [
 	| folders folder |
 	folders := model allFolders.
 	self assert: folders size equals: 3.
-	self assert: (folders entityNamed: #folders) isNil not.
+	self assert: (folders entityNamed: #folders) isNotNil.
 	self assert: (folders entityNamed: #folders) isRoot.
 	self assert: (folders select: [ :each | each isRoot ]) size equals: 1.
 	folder := folders entityNamed: #folders.

@@ -7,28 +7,22 @@ Class {
 { #category : #tests }
 FAMIXLintRuleTest >> testRules [
 
-	| instances cls badClass goodClass contextBad contextGood |
+	| instances  badClass goodClass   |
 	instances := {
 		FAMIXMetaModelClassesNotDeclaredInFameRule new.
-		FAMIXMetaModelClassesShouldNotOverrideRule new.
-		FAMIXMetaModelClassesShouldOverrideRule new }.
+		FAMIXMetaModelClassesShouldNotOverrideRule new }.
 	
 	"Run the rule"
 	instances do: [ :rule | RBSmalllintChecker runRule: rule ].
 
 	"Build the classes to test"
 	badClass := Class new.
+	badClass layout: MooseEntity layout copy.
 	badClass compile: 'mooseNameOn: stream ^ 10'.
 
 	goodClass := Class new.
+	goodClass layout: MooseEntity layout copy.
 	goodClass compile: 'foo: stream ^ 10'.
-
-	"Build the smalllint contexts"
-	contextBad := RBSmalllintContext newNoCache.
-	contextBad selectedClass: badClass.
-
-	contextGood := RBSmalllintContext newNoCache.
-	contextGood selectedClass: goodClass.
 
 	"Check the classes"
 	"We cannot check this properly. Pity"
@@ -37,6 +31,6 @@ FAMIXLintRuleTest >> testRules [
 		self assert: rule result isEmpty not ].
 "	instances do: [ :rule | 
 
-		rule checkClass: contextGood.
+		rule checkClass: goodClass.
 		self assert: rule result isEmpty].
 ]

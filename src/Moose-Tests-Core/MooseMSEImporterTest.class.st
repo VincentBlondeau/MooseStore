@@ -34,17 +34,6 @@ MooseMSEImporterTest >> testComplex [
 ]
 
 { #category : #tests }
-MooseMSEImporterTest >> testImportExport [
-	| mooseModel string |
-	string := (LANPackageTestResource  current model) asMSEString.
-	mooseModel := self readMSEStream: string readStream.
-	
-	
-	self assert: (mooseModel entities notEmpty).
-
-]
-
-{ #category : #tests }
 MooseMSEImporterTest >> testOneClass [
 	| mooseModel |
 	mooseModel := self readMSEStream: '((FAMIX.Class (name ''ClassA'')))' readStream.
