@@ -1,7 +1,7 @@
 Extension { #name : #SmalltalkImage }
 
 { #category : #'*TestServer-First' }
-SmalltalkImage >> addToStartUpList: aClass [
+SmalltalkImage >> addToShutDownList: aClass [
 	SessionManager default 	
 		registerUserClassNamed: self name
 ]
