@@ -6,7 +6,7 @@ PRScript >> evaluate [
 	content := self evaluationString.
 	^ [ 
 	self isInline
-		ifTrue: [ {PRText content: content} ]
+		ifTrue: [ {PRText content: content trim} ]
 		ifFalse: [ (PRDocument parser parse: content) children ] ]
 		on: Error
 		do: [ :e | PRBoldFormat with: (PRText content: e messageText) ]
